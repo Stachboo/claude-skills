@@ -1,0 +1,12 @@
+node_modules/
+audit-report.md
+audit.json
+*.log
+.DS_Store
+
+# Config locale (clé PSI + chemins machine). Le gabarit versionné est
+# audit.config.example.json — non couvert par ce motif, qui est exact.
+audit.config.json
+
+# État local de l'outil Serena (project.local.yml + cache déjà exclus par .serena/.gitignore)
+.serena/

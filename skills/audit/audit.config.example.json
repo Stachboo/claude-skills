@@ -1,0 +1,13 @@
+{
+  "_readme": "Copiez ce fichier en 'audit.config.json' (gitignoré) et remplissez-le. Seules les clés 'psiApiKey' et 'sites' sont lues par le code (scripts/run.mjs:59 et :29/:90). Dans 'sites', seuls 'url' et 'localPath' sont honorés (run.mjs:30). Les seuils CWV et les cutoffs de couleur ne sont PAS configurables en v0.1 : ils sont figés dans scripts/lib/thresholds.mjs.",
+  "psiApiKey": "",
+  "sites": {
+    "mon-site": {
+      "url": "https://example.com",
+      "localPath": "C:/chemin/vers/le/repo"
+    },
+    "site-sans-repo": {
+      "url": "https://example.org"
+    }
+  }
+}

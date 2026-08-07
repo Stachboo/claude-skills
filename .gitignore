@@ -1,0 +1,15 @@
+node_modules/
+__pycache__/
+*.pyc
+*.log
+.DS_Store
+
+# Config locale du skill audit : clé PageSpeed Insights + chemins machine.
+# Le gabarit versionné est audit.config.example.json.
+skills/audit/audit.config.json
+skills/audit/audit.json
+skills/audit/audit-report.md
+
+# Caches d'outils locaux
+.serena/
+.memory/

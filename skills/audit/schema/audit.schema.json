@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "site-auditor audit document",
+  "type": "object",
+  "required": ["schemaVersion", "target", "startedAt", "finishedAt", "tools", "findings", "scores"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "target": {
+      "type": "object",
+      "required": ["name", "url", "localPath"],
+      "properties": {
+        "name": { "type": ["string", "null"] },
+        "url": { "type": ["string", "null"] },
+        "localPath": { "type": ["string", "null"] }
+      }
+    },
+    "startedAt": { "type": "string" },
+    "finishedAt": { "type": "string" },
+    "tools": { "type": "object" },
+    "findings": { "type": "array", "items": { "$ref": "#/definitions/finding" } },
+    "scores": { "type": "object" }
+  },
+  "definitions": {
+    "finding": {
+      "type": "object",
+      "required": ["id", "category", "metric", "value", "unit", "status", "reason", "evidence", "source", "collectedAt"],
+      "properties": {
+        "id": { "type": "string" },
+        "category": { "type": "string" },
+        "metric": { "type": "string" },
+        "value": { "type": ["number", "string", "null"] },
+        "unit": { "type": "string" },
+        "status": { "enum": ["PASS", "WARN", "FAIL", "N_A"] },
+        "reason": { "type": "string" },
+        "evidence": { "type": "string" },
+        "source": { "type": "string" },
+        "collectedAt": { "type": "string" },
+        "elements": { "type": "string", "description": "Optional, Lighthouse audit findings only: the offending DOM nodes." }
+      }
+    }
+  }
+}

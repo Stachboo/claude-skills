@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "target": { "name": "demo", "url": "https://demo.test", "localPath": null },
+  "startedAt": "2026-06-02T10:00:00.000Z",
+  "finishedAt": "2026-06-02T10:01:00.000Z",
+  "tools": { "node": "v24.0.0", "chrome": "Chrome 130", "lighthouse": "12.x", "psi": "key" },
+  "findings": [
+    { "id": "performance.score.mobile", "category": "performance", "metric": "performance score (mobile)", "value": 74, "unit": "score", "status": "WARN", "reason": "performance 74/100", "evidence": "0.74", "source": "psi-lab", "collectedAt": "2026-06-02T10:00:30.000Z" },
+    { "id": "perf.lcp.lab.mobile", "category": "performance", "metric": "LCP (mobile, lab)", "value": 3200, "unit": "ms", "status": "WARN", "reason": "LCP ni", "evidence": "3200", "source": "psi-lab", "collectedAt": "2026-06-02T10:00:30.000Z" },
+    { "id": "perf.inp.field.mobile", "category": "performance", "metric": "INP (mobile, field p75)", "value": 230, "unit": "ms", "status": "WARN", "reason": "field NEEDS_IMPROVEMENT", "evidence": "{}", "source": "psi-field", "collectedAt": "2026-06-02T10:00:30.000Z" },
+    { "id": "accessibility.color-contrast", "category": "accessibility", "metric": "Contrast insufficient", "value": 0, "unit": "", "status": "FAIL", "reason": "Background and foreground colors do not have a sufficient contrast ratio.", "evidence": "", "source": "psi-lab", "collectedAt": "2026-06-02T10:00:30.000Z" },
+    { "id": "headers.csp", "category": "security.headers", "metric": "CSP", "value": null, "unit": "", "status": "FAIL", "reason": "Content-Security-Policy absent", "evidence": "", "source": "fetch", "collectedAt": "2026-06-02T10:00:10.000Z" },
+    { "id": "tls.expiry", "category": "security.tls", "metric": "Cert expiry", "value": 64, "unit": "days", "status": "PASS", "reason": "valid", "evidence": "64d", "source": "tls.connect", "collectedAt": "2026-06-02T10:00:12.000Z" },
+    { "id": "deps.all", "category": "security.deps", "metric": "Dependency CVEs", "value": null, "unit": "", "status": "N_A", "reason": "no local path provided", "evidence": "", "source": "N_A", "collectedAt": "2026-06-02T10:00:00.000Z" }
+  ],
+  "scores": {
+    "overall": { "value": 71, "color": "red" },
+    "performance": { "value": 74, "color": "yellow" },
+    "accessibility": { "value": 84, "color": "yellow" },
+    "seo": { "value": 100, "color": "green" },
+    "best-practices": { "value": 100, "color": "green" },
+    "security": { "value": 75, "color": "yellow" }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "stachboo-skills",
+  "description": "Agent Skills maison : audit SEO/GEO, audit performance & sécurité, écriture française sans marqueurs IA, comparateur de noms de domaine, critique d'art.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Stachboo",
+    "url": "https://github.com/Stachboo"
+  },
+  "homepage": "https://github.com/Stachboo/claude-skills",
+  "repository": "https://github.com/Stachboo/claude-skills",
+  "license": "MIT"
+}

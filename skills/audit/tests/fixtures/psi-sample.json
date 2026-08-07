@@ -1,0 +1,32 @@
+{
+  "lighthouseResult": {
+    "categories": {
+      "performance": { "score": 0.74 },
+      "accessibility": { "score": 0.91 },
+      "seo": { "score": 0.83 },
+      "best-practices": { "score": 0.96 }
+    },
+    "audits": {
+      "largest-contentful-paint": { "numericValue": 3200 },
+      "cumulative-layout-shift": { "numericValue": 0.04 },
+      "total-blocking-time": { "numericValue": 540 },
+      "server-response-time": { "numericValue": 410 },
+      "color-contrast": {
+        "score": 0,
+        "title": "Background and foreground colors do not have a sufficient contrast ratio.",
+        "description": "Low-contrast text is difficult or impossible for many users to read.",
+        "details": { "items": [
+          { "node": { "snippet": "<a class=\"adv-btn\" href=\"/devis\">Demander un devis</a>" } },
+          { "node": { "snippet": "<p class=\"adv-lead\">Bornes de recharge</p>" } }
+        ] }
+      },
+      "meta-description": { "score": 0, "title": "Document does not have a meta description." }
+    }
+  },
+  "loadingExperience": {
+    "metrics": {
+      "INTERACTION_TO_NEXT_PAINT": { "percentile": 230, "category": "NEEDS_IMPROVEMENT" },
+      "LARGEST_CONTENTFUL_PAINT_MS": { "percentile": 2600, "category": "NEEDS_IMPROVEMENT" }
+    }
+  }
+}

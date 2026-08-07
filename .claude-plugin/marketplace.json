@@ -1,0 +1,26 @@
+{
+  "name": "stachboo-skills",
+  "owner": {
+    "name": "Stachboo",
+    "url": "https://github.com/Stachboo"
+  },
+  "metadata": {
+    "description": "Agent Skills maison : audit SEO/GEO, audit perf & sécurité, écriture française sans marqueurs IA, comparateur de noms de domaine, critique d'art.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "stachboo-skills",
+      "description": "5 Agent Skills : geo-toolkit (SEO/GEO/CTR/CRO/leads), audit (perf + sécurité, sortie mesurée), ecriture-francaise (typographie FR + dé-IA), domain-price (comparateur registrars), art-criticism-writing (notices d'œuvres).",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/geo-toolkit",
+        "./skills/audit",
+        "./skills/ecriture-francaise",
+        "./skills/domain-price",
+        "./skills/art-criticism-writing"
+      ]
+    }
+  ]
+}
