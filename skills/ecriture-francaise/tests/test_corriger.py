@@ -81,5 +81,55 @@ class Protections(unittest.TestCase):
         self.assertIn("&nbsp;", out)
 
 
+class FinsDeLigne(unittest.TestCase):
+    """--ecrire doit rendre le fichier avec ses fins de ligne d'origine.
+
+    Constaté le 2026-10-01 : sous Windows, write_text traduisait chaque \\n
+    en \\r\\n, si bien qu'un fichier LF ressortait en CRLF à chaque passage.
+    """
+
+    def _passer(self, octets):
+        import subprocess
+        import tempfile
+        script = Path(__file__).resolve().parents[1] / "scripts" / "corriger.py"
+        with tempfile.NamedTemporaryFile("wb", suffix=".md", delete=False) as f:
+            f.write(octets)
+            chemin = f.name
+        subprocess.run([sys.executable, str(script), chemin, "--ecrire"],
+                       capture_output=True, check=True)
+        sortie = Path(chemin).read_bytes()
+        Path(chemin).unlink()
+        return sortie
+
+    def test_fichier_lf_reste_lf(self):
+        sortie = self._passer("Voici : un\nDeux : trois\n".encode("utf-8"))
+        self.assertNotIn(b"\r\n", sortie)
+        self.assertEqual(sortie.count(b"\n"), 2)
+
+    def _sortie_standard(self, octets):
+        import subprocess
+        import tempfile
+        script = Path(__file__).resolve().parents[1] / "scripts" / "corriger.py"
+        with tempfile.NamedTemporaryFile("wb", suffix=".md", delete=False) as f:
+            f.write(octets)
+            chemin = f.name
+        p = subprocess.run([sys.executable, str(script), chemin],
+                           capture_output=True, check=True)
+        Path(chemin).unlink()
+        return p.stdout
+
+    def test_sortie_standard_garde_les_fins_de_ligne(self):
+        lf = self._sortie_standard("Voici : un\nDeux : trois\n".encode("utf-8"))
+        self.assertNotIn(b"\r", lf)
+        crlf = self._sortie_standard("Voici : un\r\nDeux : trois\r\n".encode("utf-8"))
+        self.assertEqual(crlf.count(b"\r\n"), 2)
+        self.assertNotIn(b"\r\r\n", crlf)
+
+    def test_fichier_crlf_reste_crlf(self):
+        sortie = self._passer("Voici : un\r\nDeux : trois\r\n".encode("utf-8"))
+        self.assertEqual(sortie.count(b"\r\n"), 2)
+        self.assertNotIn(b"\r\r\n", sortie)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -26,9 +26,11 @@ from pathlib import Path
 
 # Console Windows en cp1252 : on force UTF-8 sur les flux de sortie plutôt que
 # de laisser un caractère non représentable interrompre la correction.
+# newline="" : le texte corrigé garde ses fins de ligne d'origine, et Windows
+# ne doit pas les traduire une seconde fois (LF devenait CRLF, CRLF \r\r\n).
 for _flux in (sys.stdout, sys.stderr):
     try:
-        _flux.reconfigure(encoding="utf-8", errors="replace")
+        _flux.reconfigure(encoding="utf-8", errors="replace", newline="")
     except (AttributeError, ValueError):  # flux redirigé ou non reconfigurable
         pass
 
@@ -166,14 +168,19 @@ def main():
         print(f"Fichier introuvable : {chemin}", file=sys.stderr)
         sys.exit(2)
 
-    source = chemin.read_text(encoding="utf-8")
+    # newline="" à la lecture comme à l'écriture : le fichier ressort avec ses
+    # fins de ligne d'origine. Sans cela, Windows traduisait chaque \n en \r\n
+    # à l'écriture, et un fichier LF devenait CRLF à chaque passage.
+    with open(chemin, encoding="utf-8", newline="") as f:
+        source = f.read()
     compteur = {}
     resultat = corriger(source, chemin.suffix, compteur)
 
     total = sum(compteur.values())
 
     if args.ecrire:
-        chemin.write_text(resultat, encoding="utf-8")
+        with open(chemin, "w", encoding="utf-8", newline="") as f:
+            f.write(resultat)
         print(f"{chemin} : {total} correction(s) appliquée(s).", file=sys.stderr)
     elif not args.diff:
         sys.stdout.write(resultat)
