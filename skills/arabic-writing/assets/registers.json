@@ -1,0 +1,24 @@
+{
+  "version": "0.1.0",
+  "source": "BAREC Corpus v1.0 (CAMeL-Lab), splits train+dev+test, grouped by the column Readability_Level_3, with every row whose Source is \"Hanging Odes\" excluded (764 rows of classical poetry): 68677 prose sentences of 69441.",
+  "reproduction": "To recompute this table: load the three splits of CAMeL-Lab/BAREC-Corpus-v1.0, drop the rows whose Source is \"Hanging Odes\", count the words of each sentence as word_definition below defines them, group the sentences by Readability_Level_3, and take the 25th, 50th and 75th percentiles of the word count within each group -- those are p25, median and p75. `max` is the 90th percentile of the same word counts, by the same method: linear interpolation between order statistics (numpy's default, Hyndman-Fan type 7), identical to p25, median and p75 -- p90 reproduces 15, 26 and 37 exactly, p85 and p95 do not. Grouping this way yields 35852 foundational, 18468 advanced and 14357 specialized sentences, 68677 in total; a re-derivation that does not first match those three counts has filtered or grouped differently and will not match the percentiles either. Same standard as the provenance block in tests/test_segment.py: a third party should be able to reach these numbers without guessing.",
+  "column_not_used": "BAREC also carries Text_Class, which takes the SAME three value names (Foundational / Advanced / Specialized) and is NOT the column used here. Grouping by Text_Class instead gives 3/7/12/19, 6/12/19/27 and 7/13/21/30 -- different numbers. Named here as a negative because Text_Class is what someone re-deriving the table reaches for first, it looking like \"audience\", and the mismatch then reads as an error in this asset rather than as the wrong column.",
+  "max_is_not_the_maximum": "`max` is that p90 cap, NOT the longest sentence in the band. The true maxima are 45 words (foundational), 100 (advanced) and 143 (specialized), against the 15 / 26 / 37 published here -- three to four times larger. So a reader who computes the real maximum and gets 100 is not looking at a corrupt asset, they are looking at a different quantity, and this line is here so they can recognise their own number and know which one the asset holds. The key name is a known misnomer, kept deliberately: check.py reads sentence_words.max, and renaming it to win accuracy in a documentation string would break a live interface for no functional gain. A decision, not an oversight -- a p90 cap is also the right quantity to enforce, since a ceiling at the true maximum would flag nothing.",
+  "word_definition": "A word is a token containing at least one Arabic letter; punctuation and bare numbers are not counted. The corpus's own Word_Count field counts punctuation as tokens and disagrees with a whitespace split in 76% of rows, so it was not used. Stated here so a third party can re-measure and get these same figures.",
+  "sentence_words_rule": "A per-sentence band, not a distribution over a text. `max` is a ceiling to test sentence by sentence: BAREC annotates a text at the level of its single most difficult element, so a text averaging 13 words -- the advanced median -- but carrying one 40-word sentence is not an advanced text, because 40 exceeds the advanced cap of 26. Stated as a negative on purpose: the check does not sort a text into a band, it reports the sentences that exceed the band the author declared.",
+  "verbal_ratio_rule": "Guidance for the writing side, not a checked rule: measuring it needs a part-of-speech tagger, which this standard-library-only pack does not ship. It tracks genre, not difficulty -- across the readability scale it moves 2.5 points (45.2% to 47.8%), across genres more than forty (hadith 76%, news 68.7%, encyclopedia 51%, legal 45.4%, exam questions 32.4%, the Universal Declaration of Human Rights 20.5%). Figures below are rounded to two decimals.",
+  "audience": {
+    "foundational": {"sentence_words": {"p25": 3,  "median": 6,  "p75": 10, "max": 15}},
+    "advanced":     {"sentence_words": {"p25": 7,  "median": 13, "p75": 20, "max": 26}},
+    "specialized":  {"sentence_words": {"p25": 13, "median": 20, "p75": 28, "max": 37}}
+  },
+  "genre_verbal_ratio": {
+    "news": 0.69,
+    "magazine": 0.41,
+    "literary": 0.50,
+    "legal": 0.45,
+    "reference": 0.51,
+    "religious": 0.62,
+    "children": 0.61
+  }
+}

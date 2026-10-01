@@ -1,0 +1,95 @@
+THIRD-PARTY MATERIAL IN THIS SKILL
+==================================
+
+This skill is MIT-licensed (see LICENSE) except for one directory.
+
+
+tests/fixtures/clean/  —  CC BY-SA 4.0
+--------------------------------------
+
+The twelve Arabic text files under tests/fixtures/clean/ are verbatim excerpts
+from:
+
+    BAREC Corpus v1.0
+    Khalid N. Elmadani, Nizar Habash and Hanada Taha-Thomure,
+    "A Large and Balanced Corpus for Fine-grained Arabic Readability
+    Assessment", Findings of the Association for Computational Linguistics:
+    ACL 2025.
+    https://huggingface.co/datasets/CAMeL-Lab/BAREC-Corpus-v1.0
+    https://barec.camel-lab.com
+
+    Licensed under Creative Commons Attribution-ShareAlike 4.0 International
+    (CC BY-SA 4.0): https://creativecommons.org/licenses/by-sa/4.0/
+    Licence verified at source on 2026-09-17.
+
+These excerpts keep the CC BY-SA 4.0 licence of their corpus. Each file carries
+its own attribution on its first line: corpus, citation, source, document id,
+domain, readability level, and the span of the document excerpted.
+
+| file      | BAREC source | domain            | level | document                              |
+|-----------|--------------|-------------------|-------|---------------------------------------|
+| 01.txt    | Hindawi      | Arts & Humanities |   1   | The Diamond Maker                     |
+| 02.txt    | Hindawi      | Arts & Humanities |   3   | Arabic Language as a Living Organism  |
+| 03.txt    | Hindawi      | Social Sciences   |   2   | Summary of the History of Iraq        |
+| 04.txt    | Hindawi      | Social Sciences   |   3   | Islamic Mysticism and Imam al-Sharani |
+| 05.txt    | Hindawi      | STEM              |   1   | 3D Printing                           |
+| 06.txt    | Hindawi      | STEM              |   3   | The Nature of Time and Space          |
+| 07.txt    | Wikipedia    | Arts & Humanities |   3   | Hajj in Islam                         |
+| 08.txt    | Wikipedia    | STEM              |   3   | Engineering                           |
+| 09.txt    | Wikipedia    | Social Sciences   |   1   | Ramadan in Libya                      |
+| 10.txt    | Wikipedia    | Social Sciences   |   3   | Talaat Harb                           |
+| 11.txt    | Wikipedia    | Social Sciences   |   2   | Women in Ancient Egypt                |
+| 12.txt    | Wikipedia    | Arts & Humanities |   3   | Bismillah                             |
+
+Total: 4,445 Arabic words, from 2 of BAREC's 30 sources. Counted with this
+skill's own scripts/segment.py word_count(), attribution line excluded, so the
+figure is recomputable with the code shipped beside it.
+
+
+Why this does not make the whole skill ShareAlike
+-------------------------------------------------
+
+CC BY-SA 4.0 attaches its ShareAlike condition to "Adapted Material", which
+section 1(a) defines as material "derived from or based upon the Licensed
+Material and in which the Licensed Material is translated, altered, arranged,
+transformed, or otherwise modified in a manner requiring permission".
+
+The excerpts here are unmodified, and the scripts, assets and documents are
+independent works that sit beside them rather than being derived from them. On
+that reading the ShareAlike condition covers the excerpts and not the rest.
+
+This is stated as the basis for how the files are marked, not as legal advice.
+If you redistribute this skill, keep this NOTICE and the per-file headers. If
+you need a distribution with no CC BY-SA material in it at all, delete
+tests/fixtures/clean/ — you lose the false-positive tests that depend on it and
+nothing else.
+
+Verified rather than assumed, on 2026-09-17: with the directory removed, the
+suite runs 148 tests and reports FAILED (failures=3), all three in
+test_false_positives.py — test_corpus_contract,
+test_sources_and_bands_are_spread and test_hard_rules_stay_within_budget. It
+does not report "NO TESTS RAN", and it does not pass over an empty corpus,
+which would be the dangerous outcome: a false-positive budget that silently
+holds because nothing was measured.
+
+
+Measured values derived from BAREC
+----------------------------------
+
+The sentence-length bands and verbal-ratio figures in assets/registers.json and
+assets/profiles.json were measured by this project over BAREC. They are
+measurements, and each one publishes the corpus, the column, the counts and the
+method needed to recompute it (see references/registers.md and
+references/sources.md). BAREC is credited there as the corpus they were
+measured over.
+
+
+Sources consulted but NOT redistributed here
+--------------------------------------------
+
+The rules cite the Netflix Arabic Timed Text Style Guide, the World Bank
+Translation Style Guide, decisions of Majmaʿ al-Lugha al-ʿArabiyya (Cairo) and
+of the Arabic Language Academy of Damascus, Aḥmad Zakī Bāšā (1912) and ʿAbd
+al-Salām Muḥammad Hārūn. None of those documents are included in this
+distribution. references/sources.md carries the chain to each one so any
+finding can be re-verified at its source.

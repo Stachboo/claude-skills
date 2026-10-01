@@ -1,0 +1,89 @@
+{
+  "version": "0.1.0",
+  "rules": [
+    {
+      "id": "AR-TYPO-01",
+      "kind": "pattern",
+      "severity": "hard",
+      "pattern": "[\\u0621-\\u0669\\u0670][ \\t]+(?:[\\u060C\\u061B\\u061F,;?]|!(?!\\[))",
+      "message": "No space before Arabic comma, semicolon, question or exclamation mark.",
+      "fix": "Remove the space.",
+      "isnad": "Netflix Arabic Timed Text Style Guide: 'There should be no space before commas, interrogation marks or exclamation marks.' No consulted source permits it. Note: this differs from French, where ; ? ! take a non-breaking space.",
+      "note": "The left-hand class is \\u0621-\\u0669 plus \\u0670, not \\u0621-\\u064A: it must include the tashkeel block, because in vocalised prose the character before the space is a mark, not a letter. The project's own RED baseline measured generated prose at 784 diacritics per 1000 letters, so a letters-only class would miss the defect in exactly the texts most likely to carry it. '!' carries a (?!\\[) guard so that a Markdown image, '![alt](src)', is not read as an exclamation mark. The right-hand class gained the Latin ',' ';' and '?' on 2026-09-17. The Netflix rule is about SPACING and is glyph-agnostic -- 'no space before commas, interrogation marks or exclamation marks' says nothing about which comma -- so this rule's scope had been narrower than its own isnad. That is the opposite of the failure this table guards against: not an unsourced rule, but a source whose coverage was not being used. The case that exposed it, 'al-sharika ra'ida , wa-hiya kabira', escaped both hard typography rules and exited clean: AR-TYPO-01 wanted an Arabic mark after the space, AR-TYPO-02 wanted the Latin mark adjacent, and a space before a Latin comma fell between them. The two now compose -- the space fires AR-TYPO-01, and once it is removed the glyph fires AR-TYPO-02: two faults, two findings, each carrying its own source. The '!' stays outside the class so that it keeps its (?!\\[) guard; it is the one mark shared by both scripts that can legitimately open a Markdown image. DEFERRED, measured 2026-09-17: the LEFT-hand class under-detects. Recall over an annotated set was 0.62 -- 9 misses out of 24 -- because the class requires an Arabic letter or mark immediately before the space, so a space before a mark escapes whenever the preceding character is ')', a Latin letter, '.', or an ASCII digit. The measured example is '900 km2 , amma', where the character before the space is the digit '2'. Not widened in the same change as the right-hand class on purpose: widening the left side admits Latin and digit contexts that the right-side widening never touched, so it needs its own false-positive sweep against the clean corpus before it can ship. Recorded here rather than left in a review thread so that the next person to open this rule finds the number."
+    },
+    {
+      "id": "AR-TYPO-02",
+      "kind": "pattern",
+      "severity": "hard",
+      "pattern": "[\\u0621-\\u065F\\u0670][,;?]",
+      "message": "Latin comma, semicolon or question mark inside Arabic text. Use \\u060C \\u061B \\u061F.",
+      "fix": "Replace ',' with '\\u060C', ';' with '\\u061B', '?' with '\\u061F'.",
+      "isnad": "Codepoints verified locally with Python unicodedata: U+060C ARABIC COMMA, U+061B ARABIC SEMICOLON, U+061F ARABIC QUESTION MARK. Reproduce: python -c \"import unicodedata as u; print(u.name(chr(0x060C)))\"",
+      "note": "The left-hand class takes Arabic letters and marks but deliberately stops at \\u065F, excluding the Arabic-Indic digits \\u0660-\\u0669. '\\u0661,\\u0665' is a number separator in legacy Arabic text, not sentence punctuation, and flagging it would be a false positive on a hard rule."
+    },
+    {
+      "id": "AR-TYPO-03",
+      "kind": "pattern",
+      "severity": "hard",
+      "pattern": "(?m)^[ \\t]*(?:[\\u060C\\u061B:\\u061F\\u00BB)]|!(?!\\[)|\\.(?!\\.))",
+      "message": "These marks may never open a line: \\u060C \\u061B . : \\u061F ! \\u00BB )",
+      "fix": "Move the mark to the end of the previous line.",
+      "isnad": "Ahmad Zaki Pasha, al-Tarqim wa-alamatuh fi al-lugha al-arabiyya (1912), section 1: 'min hadhihi al-alamat ma la yajuz wad'uhu mutlaqan, la fi awwal al-satr wa-la fi awwal al-kalam'. Full text: safahat.org/books/82047270/1/",
+      "note": "Two guards against text that is correct. '.' is not flagged when followed by another '.', because a line opening on an elision ('... thumma qala') is legitimate typography, not a stranded full stop. '!' is not flagged when followed by '[', because that is a Markdown image at the head of a line. Scope limit: Zaki's rule is about the typographic line; this pattern can only see the source line, which is a paragraph in a plain-text or Markdown file. The approximation is safe in that direction -- a paragraph opening on a comma is wrong under any line breaking."
+    },
+    {
+      "id": "AR-ORTH-01",
+      "kind": "pattern",
+      "severity": "recommendation",
+      "pattern": "(\\u062B\\u0644\\u0627\\u062B|\\u0623\\u0631\\u0628\\u0639|\\u062E\\u0645\\u0633|\\u0633\\u062A|\\u0633\\u0628\\u0639|\\u062B\\u0645\\u0627\\u0646|\\u062A\\u0633\\u0639)(\\u0645\\u0627\\u0626\\u0629|\\u0645\\u0626\\u0629)",
+      "message": "Numbers three to nine must be written detached from mi'a.",
+      "fix": "Write thalath mi'a ... tis' mi'a with a space between them.",
+      "isnad": "Decision of Majma al-Lugha al-Arabiyya, Cairo, 'fi kitabat al-a'dad: fasl thalath ila tis' an mi'a', four motives given (joined form is obscure; detachment attested in al-Tabari; the case ending falls on the first word; easier for learners). Reproduced verbatim by Abd al-Salam Muhammad Harun, Qawa'id al-imla wa-alamat al-tarqim. Archive.org item a476n. Demoted from hard to recommendation on 2026-09-17 on measured evidence. Across all thirty sources of BAREC (1M+ words) the joined form outnumbers the detached 60 to 3, so the form this rule blocked is 95 per cent of published usage; the spread covers literature (Hindawi, Kalima), children's publishing (Majed), classical narrative (Arabian Nights) and encyclopedia (Wikipedia), so it is not one register's quirk. A sweep of 11,888 sentences of Hindawi and Wikipedia prose gave 17 findings and 0 true positives: precision 0.00. The pattern is correct -- it matches exactly what it claims to -- and it is the SEVERITY that fails. This decision is an argued reform, carrying four motives of its own, not a report of settled usage, and a reform that publishing ignores 95 per cent of the time fails the unanimity half of the hard criterion. The rule still reports, because the Academy's preference is real and worth surfacing; it no longer fails a build.",
+      "note": "Left unanchored on purpose: the joined form takes prefixes ('wa-thalathmi'a', 'al-thalathmi'a') and mi'a never begins a word of its own, so any adjacency of one of these seven numerals with mi'a is the joined form. Known limitation, not repaired: the pattern matches bare letters, so a vocalised joined form ('sittumi'a' with a shadda between the two words) slips through. Left as is because this rule targets legacy, CMS-pasted and translated Arabic, which is normally undiacritised."
+    },
+    {
+      "id": "AR-SCRIPT-01",
+      "kind": "pattern",
+      "severity": "recommendation",
+      "pattern": "[\\u0621-\\u065F\\u0670][ \\t]+(?![(\\[])[A-Za-z](?:[A-Za-z'-]|\\.(?![A-Za-z]))*(?:[ \\t]+[A-Za-z](?:[A-Za-z'-]|\\.(?![A-Za-z]))*)*[ \\t]+[\\u0621-\\u064A]",
+      "message": "Bare Latin script inside an Arabic sentence. Transliterate into Arabic, or put the Latin form in parentheses.",
+      "fix": "Write the name in Arabic script; the Latin original may follow in parentheses.",
+      "isnad": "Majma al-Lugha al-Arabiyya, Cairo, 'qararat kitabat al-a'lam al-a'jamiyya bi-huruf arabiyya', rule 1: write the foreign name per its pronunciation, with the Latin form between parentheses in scholarly works, e.g. Bordeaux. Netflix Arabic Style Guide converges: 'Proper names should be transliterated.' Demoted from hard to recommendation on 2026-09-17. The hard criterion requires a rule to be unanimous AND decidable without context. Bare Latin brand names in contemporary Arabic web copy (\"sharikat Microsoft al-alamiyya\") are a usage this decision predates, so unanimity fails. The genuinely wrong case the rule was written for -- a name of Arabic origin romanised and then left in Latin script inside Arabic prose, e.g. \"Umm Salama\" where the Arabic umm Salama was meant -- is not mechanically distinguishable from a foreign brand name. A measured baseline on 2026-09-17 also showed models already transliterate Arabic-origin names correctly unprompted, so as a hard rule it would fire mostly on legacy web copy, where a false positive costs more than a miss. The rule still reports; it no longer fails a build.",
+      "note": "A dot inside a Latin token is only accepted when no letter follows it. That keeps initials ('J. R. R.') matchable while stopping the rule from reading a bare domain ('example.com') as a name to transliterate -- a URL is not a name, and flagging one would be a false positive. A scheme-bearing URL is already excluded because ':' cannot occur inside a token. The left-hand class includes the tashkeel block for the reason given on AR-TYPO-01. The rule requires Arabic on BOTH sides on purpose: that is what keeps it off headings, citations, code and English lines, at the cost of missing bare Latin at the end of a sentence."
+    },
+    {
+      "id": "AR-RELIG-02",
+      "kind": "pattern",
+      "severity": "hard",
+      "pattern": "\\uFD3E(?=\\S)[^\\uFD3E\\uFD3F]{1,400}(?<=\\S)\\uFD3F",
+      "message": "Ornate parentheses are reversed. U+FD3F opens and U+FD3E closes, despite their Unicode names.",
+      "fix": "Write U+FD3F first, U+FD3E last.",
+      "isnad": "Verified locally: unicodedata.category(chr(0xFD3F)) == 'Ps' (open punctuation) and category(chr(0xFD3E)) == 'Pe' (close), while mirrored == 0 for both, so the bidi engine does not reorder them. Reproduce: python -c \"import unicodedata as u; print(u.category(chr(0xFD3F)), u.category(chr(0xFD3E)))\"",
+      "note": "The (?=\\S) and (?<=\\S) guards repair a false positive that fired on correct text. Two correctly quoted verses in one paragraph leave a FD3E ... FD3F span between them -- the close of the first quotation and the open of the second -- which the unguarded pattern read as one reversed pair. In a reversed pair the parentheses hug the quoted words; in the gap between two correct quotations they face outwards onto whitespace. Residual gap: correct quotations written with no space at all between them ('...}{...') would still fire; that spacing is itself malformed and was judged the smaller risk."
+    },
+    {
+      "id": "AR-RELIG-01",
+      "kind": "pattern",
+      "severity": "recommendation",
+      "pattern": "\\(\\s*(\\u0635|\\u0635\\u0644\\u0639\\u0645|\\u0635\\s*\\u0645)\\s*\\)",
+      "message": "Abbreviating the prayer on the Prophet is discouraged. Write it in full, or use \\uFDFA.",
+      "fix": "Replace with \\uFDFA or the full formula.",
+      "isnad": "PENDING FIRST-HAND VERIFICATION. Convergence reported by Dar al-Ifta al-Misriyya fatwa 19288, Ibn Baz fatwas 13605 and 7369, and Jordanian Ifta 3607 - but these were read via tool summary, not at source. Deliberately kept a recommendation, not a hard rule, until read directly: this project does not fail a text on a second-hand religious source.",
+      "note": "The trailing '\\s*\\)' is what keeps a page citation out of range: '(sad 12)' does not match because a digit follows the space."
+    },
+    {
+      "id": "AR-DIAC-01",
+      "kind": "ratio",
+      "severity": "recommendation",
+      "pattern": null,
+      "threshold": {
+        "diacritics_per_1000_letters": 200,
+        "status": "provisional"
+      },
+      "message": "Running prose is heavily vocalised. Full tashkil belongs on Qur'anic and hadith citations; elsewhere diacritics are functional - used where their absence changes the meaning.",
+      "fix": "Keep shadda, madda and hamzat qat'; drop the fatha except on waw and ya; vocalise uncommon proper names.",
+      "isnad": "Majma al-Lugha al-Arabiyya, Cairo, 'qawa'id al-shakl fi al-kutub al-madrasiyya', approved by the council 1959 and the conference 1960: full vocalisation for Qur'anic verses and hadith at every level; elsewhere 'yuhmal al-shakl bi-l-fatha' while shadda, madda and hamzat qat' remain obligatory. Corroborated independently by the World Bank Arabic Style Guide 2004 and the Netflix Arabic Style Guide, which both make diacritics functional. Measured on this project's RED baseline 2026-09-17: generated prose reached 784 and 770 diacritics per 1000 Arabic letters, against 9 for a news dispatch.",
+      "note": "kind is 'ratio', not 'pattern', and the pattern is null: this rule is not expressible as a regex. It is a ratio over a whole text, and it has to exclude Qur'anic and hadith citations before measuring, since full vocalisation is REQUIRED there by the same decision that discourages it elsewhere. run_rules skips it; the measurement pass in scripts/check.py owns it.\n\nTHRESHOLD: 200 diacritics per 1000 Arabic letters. Diacritics are U+064B-U+0652 plus U+0670; letters are U+0621-U+064A; both are counted only AFTER removing every span between U+FD3F and U+FD3E and every span between the guillemets, so a correctly cited verse or hadith contributes neither marks nor letters. PROVISIONAL, and marked so on purpose: no consulted source states a cut-off. This number is inferred from measurement, not transmitted from an authority, and it is the only figure in this table with no isnad of its own.\n\nReasoning from the data. Two measurements are available. This project's RED baseline of 2026-09-17: 9 per 1000 for a news dispatch and 43 for a zakat explainer written for a lay reader, against 784 and 770 for over-vocalised generated prose. And BAREC, whose per-source split is essentially binary -- a source is either near 0 per cent or near 100 per cent vocalised. The two populations are therefore separated by an empty band running from roughly 50 to roughly 750, and any cut-off inside that band separates them equally well; the choice is only about which side absorbs the residual risk. 200 is the log-midpoint of the measured gap, sqrt(43 x 770) = 182, rounded up to a round number: 4.7x above the highest correct measurement and 3.9x below the lowest defective one. Rounded UP rather than down so the residual risk falls on the side of the miss rather than the false positive, which is this project's stated cost asymmetry -- these rules run over text somebody already believes is correct. Re-measure and move it if a corpus of correct, functionally vocalised prose is ever found above 100. Cross-check run on 2026-09-17 with scripts/check.py itself, on one sentence in both forms: fully vocalised it measures 788, and the same sentence reduced to its shadda -- which is what 'functional' leaves, since madda and hamzat qat' are carried by the letters U+0622, U+0623 and U+0625 and not by a combining mark -- measures 30. The threshold therefore sits 6.7x above the correct form of that text and 3.9x below the defective one. The 788 also reproduces the baseline's 784 independently, which is what establishes that this counting method and the one used for the baseline agree.\n\nThe rule fires only where the declared profile sets diacritics to 'functional'. Under 'citations-full' and 'full' -- the religious and children presets -- heavy vocalisation is the declared intent, and density says nothing about correctness."
+    }
+  ]
+}

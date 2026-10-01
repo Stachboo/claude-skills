@@ -1,0 +1,12 @@
+{
+  "version": "0.1.0",
+  "presets": {
+    "news":      {"school": "modern-usage", "digits": "european",     "italics": false, "diacritics": "functional",     "audience": "advanced",    "genre": "news"},
+    "magazine":  {"school": "modern-usage", "digits": "european",     "italics": false, "diacritics": "functional",     "audience": "advanced",    "genre": "magazine"},
+    "literary":  {"school": "modern-usage", "digits": "arabic-indic", "italics": false, "diacritics": "functional",     "audience": "advanced",    "genre": "literary"},
+    "legal":     {"school": "cairo-46",     "digits": "european",     "italics": false, "diacritics": "functional",     "audience": "specialized", "genre": "legal"},
+    "reference": {"school": "modern-usage", "digits": "european",     "italics": false, "diacritics": "functional",     "audience": "specialized", "genre": "reference"},
+    "religious": {"school": "cairo-46",     "digits": "arabic-indic", "italics": false, "diacritics": "citations-full", "audience": "advanced",    "genre": "religious"},
+    "children":  {"school": "modern-usage", "digits": "arabic-indic", "italics": false, "diacritics": "full",           "audience": "foundational", "genre": "children"}
+  }
+}
