@@ -49,8 +49,15 @@ REGLES = [
     ("espace-avant-ponctuation-double",
      re.compile(rf"{ESPACES}([;!?])"), NARROW + r"\1"),
 
+    # La garde des chiffres ne protège que l'heure ou le ratio collés (12:30,
+    # 3:1). Placée devant les espaces, elle laissait le motif démarrer après
+    # l'espace de « Étape 1 : » et rendait « 1 + espace + insécable + : ».
+    # Le motif part donc après la dernière lettre : soit il prend toutes les
+    # espaces, soit il n'y en a aucune et le caractère précédent n'est pas
+    # un chiffre.
     ("espace-avant-deux-points",
-     re.compile(rf"(?<![0-9]){ESPACES}:(?![0-9/])"), NBSP + ":"),
+     re.compile(rf"(?<![ {NBSP}{NARROW}])(?:[ {NBSP}{NARROW}]+|(?<![0-9])):(?![0-9/])"),
+     NBSP + ":"),
 
     ("guillemet-ouvrant",
      re.compile(rf"«{ESPACES}"), "«" + NBSP),
@@ -70,10 +77,17 @@ REGLES = [
 
 
 def corriger_texte(fragment: str, compteur: dict) -> str:
+    # Les motifs acceptent « zéro espace ou plus », donc un passage déjà conforme
+    # se re-remplace par lui-même. Ne compter que les substitutions qui changent
+    # réellement le texte, sans quoi le décompte gonfle et ne mesure plus rien.
     for nom, motif, remplacement in REGLES:
-        fragment, n = motif.subn(remplacement, fragment)
-        if n:
-            compteur[nom] = compteur.get(nom, 0) + n
+        def remplacer(match, nom=nom, remplacement=remplacement):
+            nouveau = match.expand(remplacement)
+            if nouveau != match.group(0):
+                compteur[nom] = compteur.get(nom, 0) + 1
+            return nouveau
+
+        fragment = motif.sub(remplacer, fragment)
     return fragment
 
 
@@ -89,6 +103,12 @@ def corriger_html(source: str, compteur: dict) -> str:
         source = re.sub(rf"<{tag}\b.*?</{tag}\s*>", ranger, source,
                         flags=re.S | re.I)
     source = re.sub(r"<!--.*?-->", ranger, source, flags=re.S)
+
+    # Les entités se terminent par un point-virgule. Sans cette protection, la
+    # règle « espace fine avant ; » s'applique à &nbsp; et rend « &nbsp ; »,
+    # qui n'est plus une entité : le balisage est corrompu et s'affiche en clair.
+    source = re.sub(r"&(?:[a-zA-Z][a-zA-Z0-9]{1,31}|#\d{1,7}|#[xX][0-9a-fA-F]{1,6});",
+                    ranger, source)
 
     # 2. ne traiter que les nœuds de texte, jamais l'intérieur des balises
     morceaux = re.split(r"(<[^>]+>)", source)
@@ -150,22 +170,21 @@ def main():
     compteur = {}
     resultat = corriger(source, chemin.suffix, compteur)
 
-    if args.diff:
-        total = sum(compteur.values())
-        if not total:
-            print("Aucune correction nécessaire.")
-        else:
-            print(f"{total} correction(s) :")
-            for nom in sorted(compteur, key=lambda k: -compteur[k]):
-                print(f"  {compteur[nom]:>5}  {nom}")
-        return
+    total = sum(compteur.values())
 
     if args.ecrire:
         chemin.write_text(resultat, encoding="utf-8")
-        total = sum(compteur.values())
-        print(f"{chemin} : {total} correction(s) appliquée(s).")
-    else:
+        print(f"{chemin} : {total} correction(s) appliquée(s).", file=sys.stderr)
+    elif not args.diff:
         sys.stdout.write(resultat)
+
+    if args.diff:
+        if not total:
+            print("Aucune correction nécessaire.", file=sys.stderr)
+        else:
+            print(f"{total} correction(s) :", file=sys.stderr)
+            for nom in sorted(compteur, key=lambda k: -compteur[k]):
+                print(f"  {compteur[nom]:>5}  {nom}", file=sys.stderr)
 
 
 if __name__ == "__main__":
