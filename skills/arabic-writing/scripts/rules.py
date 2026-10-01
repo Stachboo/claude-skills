@@ -14,11 +14,12 @@ is what this table exists to prevent.
 
 Two kinds of rule
 -----------------
-`kind: "pattern"` -- a regex, evaluated here.
-`kind: "ratio"`   -- a measurement over the whole text, NOT evaluated here.
+`kind: "pattern"`     -- a regex, evaluated here.
+`kind: "ratio"`       -- a measurement over the whole text, NOT evaluated here.
+`kind: "consistency"` -- the text checked against itself, NOT evaluated here.
 
-`run_rules` skips every non-pattern rule and leaves it to the later measurement
-pass, which can select them with `[r for r in rules if r["kind"] == "ratio"]`.
+`run_rules` skips every non-pattern rule and leaves it to the passes in
+`check.py`, which select them by kind.
 A non-pattern rule stores `pattern: null`, never `""`: an empty regex matches at
 every position in the text, so an empty pattern would make a rule fire once per
 character. `load_rules` rejects both that and a pattern on a non-pattern rule.
@@ -33,8 +34,9 @@ Three severities
                     preface states outright that no pan-Arab consensus exists.
                     On these the checker must never judge the spelling; it
                     checks the text against itself for consistency instead.
-                    No `divergence` rule exists yet -- the severity is defined
-                    now so that the engine already supports one.
+                    AR-TANWIN-01 is the first `divergence` rule: two placements
+                    of tanwin al-fath, both in print, never judged -- only
+                    reported when one text uses both.
 """
 import json
 import re
@@ -42,7 +44,7 @@ import re
 SEVERITIES = ("hard", "recommendation", "divergence")
 
 PATTERN_KIND = "pattern"
-NON_PATTERN_KINDS = ("ratio",)
+NON_PATTERN_KINDS = ("ratio", "consistency")
 KINDS = (PATTERN_KIND,) + NON_PATTERN_KINDS
 
 

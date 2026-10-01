@@ -199,6 +199,82 @@ def ratio_findings(rules, profile, density):
     return out
 
 
+# Tanwin al-fath carried by a word-final alif, in its two printed placements.
+# Marks other than U+064B may sit on either side of it (a shadda, typically);
+# the lookaheads keep both patterns at the end of a word.
+_OTHER_MARKS = "[ٌ-ْٰ]*"
+_WORD_GOES_ON = "(?![ء-يً-ْٰ])"
+TANWIN_BEFORE_ALIF = re.compile(
+    "(?<=[ء-ي])" + _OTHER_MARKS + "ً" + _OTHER_MARKS + "ا"
+    + _WORD_GOES_ON)
+TANWIN_ON_ALIF = re.compile(
+    "(?<=[ء-ي])ا" + _OTHER_MARKS + "ً" + _WORD_GOES_ON)
+
+
+def tanwin_placements(text):
+    """Offsets of each placement of tanwin al-fath, cited scripture excluded.
+
+    Returns {"before": [...], "on": [...]}. Citations are blanked to spaces of
+    the same length rather than removed, so the offsets still index `text`.
+    """
+    body = CITATION.sub(lambda m: " " * len(m.group(0)), text)
+    return {
+        "before": [m.start() for m in TANWIN_BEFORE_ALIF.finditer(body)],
+        "on": [m.start() for m in TANWIN_ON_ALIF.finditer(body)],
+    }
+
+
+def _tanwin_finding(rule, text):
+    """AR-TANWIN-01: report a text that uses both placements, and say nothing else.
+
+    Points at the first occurrence of the less frequent placement -- the one a
+    reader would most likely change -- and carries both counts, because the
+    rule is a divergence: it may report the mix, never choose a side.
+    """
+    found = tanwin_placements(text)
+    before, on = found["before"], found["on"]
+    if not before or not on:
+        return None
+    pos = (before if len(before) < len(on) else on)[0]
+    line = text.count("\n", 0, pos) + 1
+    col = pos - (text.rfind("\n", 0, pos) + 1) + 1
+    return {
+        "id": rule["id"],
+        "severity": rule["severity"],
+        "message": "%s Counted outside cited scripture: %d before the alif, %d on "
+                   "the alif." % (rule["message"], len(before), len(on)),
+        "fix": rule.get("fix", ""),
+        "isnad": rule["isnad"],
+        "line": line,
+        "col": col,
+        "excerpt": text[max(0, pos - 20):pos + 20].replace("\n", " "),
+        "before": len(before),
+        "on": len(on),
+    }
+
+
+# Same discipline as RATIO_MEASUREMENTS: a consistency rule with no entry
+# raises instead of sitting in the table inert.
+CONSISTENCY_CHECKS = {"AR-TANWIN-01": _tanwin_finding}
+
+
+def consistency_findings(rules, text):
+    """Run every consistency rule in the table. Same finding shape as `run_rules`."""
+    out = []
+    for r in rules:
+        if r.get("kind") != "consistency":
+            continue
+        check_it = CONSISTENCY_CHECKS.get(r["id"])
+        if check_it is None:
+            raise ValueError(
+                "rule %s is kind 'consistency' but no check is registered for "
+                "it in check.py; it would be recorded and inert" % (r["id"],))
+        finding = check_it(r, text)
+        if finding is not None:
+            out.append(finding)
+    return out
+
+
 def measure(text, profile):
     """Sentence-length report against the profile's audience target.
 
@@ -380,7 +456,8 @@ def main(argv=None):
         # Appended after the positional findings rather than merged into them:
         # run_rules returns its list sorted by line and column, and a ratio
         # rule has neither, so there is no position to sort one into.
-        findings = findings + ratio_findings(rules, profile, density)
+        findings = (findings + ratio_findings(rules, profile, density)
+                    + consistency_findings(rules, text))
     except ValueError as e:
         print(str(e), file=sys.stderr)
         return EXIT_CANNOT_JUDGE

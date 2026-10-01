@@ -32,10 +32,10 @@ python -c "import json; print([r['id'] for r in json.load(open('assets/rules.jso
 Output, run from the skill root on 2026-09-17:
 
 ```
-['AR-TYPO-01', 'AR-TYPO-02', 'AR-TYPO-03', 'AR-ORTH-01', 'AR-SCRIPT-01', 'AR-RELIG-02', 'AR-RELIG-01', 'AR-DIAC-01']
+['AR-TYPO-01', 'AR-TYPO-02', 'AR-TYPO-03', 'AR-ORTH-01', 'AR-SCRIPT-01', 'AR-RELIG-02', 'AR-RELIG-01', 'AR-DIAC-01', 'AR-TANWIN-01']
 ```
 
-Eight ids, eight lines in the table below. **No gap.**
+Nine ids, nine lines in the table below (re-run 2026-10-01). **No gap.**
 
 ## Rule → source
 
@@ -49,6 +49,7 @@ Eight ids, eight lines in the table below. **No gap.**
 | **AR-RELIG-02** | Unicode Character Database | Python `unicodedata`, stdlib | `python -c "import unicodedata as u; print(u.category(chr(0xFD3F)), u.category(chr(0xFD3E)))"` → `Ps Pe`; `u.mirrored` is 0 for both. `[verified]` (re-run here) |
 | **AR-RELIG-01** | Dār al-Iftāʾ al-Miṣriyya fatwa **19288**; Ibn Bāz fatwas **13605** and **7369**; Jordanian Iftāʾ **3607** | not held locally; only fatwa numbers are recorded | **PENDING FIRST-HAND VERIFICATION.** Open each fatwa at its issuing body and read it. Until that is done the rule stays a recommendation. `[reported]` |
 | **AR-DIAC-01** | Decision of مجمع اللغة العربية, Cairo, *قواعد الشكل في الكتب المدرسية* (council 1959, conference 1960); corroborated by the World Bank and Netflix guides | Academy collection and Hārūn `a476n` carry the same text independently; World Bank PDF at `meridianlinguistics.com/wp-content/uploads/2019/07/Arabic-World-Bank-Translation-Style-Guide.pdf` | find «يُهمل الشكل بالفتحة» and the obligation on shadda, madda, hamzat qaṭʿ; Netflix **§22 Diacritics**: **"The use of Arabic diacritics (Al Harakat) is required if their absence changes the meaning of the word."** **The 200/1000 threshold is in none of them** — see below. `[verified]` (research phase) Academy, Hārūn, World Bank; `[verified]` (first-hand) Netflix |
+| **AR-TANWIN-01** | Netflix, *Arabic Timed Text Style Guide*, **§22 Diacritics**; BAREC Corpus v1.0 (CAMeL Lab) | Netflix archive as for AR-TYPO-01; BAREC on HuggingFace, `CAMeL-Lab/BAREC-Corpus-v1.0`, sha256[:16] of the files read: train `8ff5b1c1202a5993`, dev `e918a2f8e8839081`, test `fa92c19698a60da8` | Netflix §22: tanwīn on the letter before the alif "due to line heights that create overlapping in many cases" — a house rule. Then `python tools/barec_tanwin.py DIR`: before the alif 1 905, on it 418, **7 publishers to 6**. No Arabic-language normative source naming the placement was found, which is why the severity is `divergence`. `[verified]` (first-hand) Netflix; `[verified]` (measured here, 2026-10-01) BAREC |
 
 ## The one number with no document behind it
 

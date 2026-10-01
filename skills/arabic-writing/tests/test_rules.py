@@ -98,7 +98,7 @@ class TestRuleKind(unittest.TestCase):
 
     def test_every_rule_declares_a_kind(self):
         for r in self.rules:
-            self.assertIn(r["kind"], ("pattern", "ratio"), r["id"])
+            self.assertIn(r["kind"], ("pattern", "ratio", "consistency"), r["id"])
 
     def test_pattern_rules_have_a_non_empty_pattern(self):
         for r in self.rules:

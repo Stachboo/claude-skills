@@ -127,6 +127,8 @@ Three severities, and the gate between them is the point of the project.
   does not follow unanimously.
 - **`divergence`** — never judges spelling. Where the academies genuinely contradict each other, the
   checker measures consistency against the profile you declared and refuses to pick a winner.
+  The first one, `AR-TANWIN-01`, reports a text that places tanwīn al-fatḥ both ways (`أيضًا` and
+  `أيضاً`): published Arabic splits 7 publishers to 6 on it, so neither is called wrong.
 
 `AR-ORTH-01` shows the gate working. The Cairo Academy decided the numerals three to nine are
 written detached from *miʾa*, with four stated motives. Then it was counted: across all thirty
@@ -155,7 +157,7 @@ One number in it has no source: `AR-DIAC-01`'s threshold of 200 diacritics per 1
 python -m unittest discover -s tests -t .
 ```
 
-148 tests. They include a false-positive budget measured over a clean corpus, because the risk this
+158 tests. They include a false-positive budget measured over a clean corpus, because the risk this
 project actually runs is not missing an error — it is inventing one.
 
 ## Licence

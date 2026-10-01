@@ -96,7 +96,7 @@ La dernière ligne résume tout, par exemple `2 hard, 0 recommendation, 0 diverg
 |---|---|---|
 | **hard** | faute établie, avec sa source | corriger |
 | **recommendation** | question de jugement | à vous de décider |
-| **divergence** | les académies ne sont pas d’accord | rien à corriger, juste à savoir |
+| **divergence** | les sources ne sont pas d’accord, aucune forme n’est fautive | si votre texte mélange les deux formes, choisissez-en une et gardez-la partout |
 
 Chaque remarque indique la règle, la correction et la source.
 

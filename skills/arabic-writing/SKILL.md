@@ -4,7 +4,7 @@ description: Reviews and writes Modern Standard Arabic. Checks punctuation, orth
 license: MIT
 compatibility: Requires Python 3.8+ (standard library only)
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
 ---
 
 # Arabic Writing
@@ -239,8 +239,9 @@ The third severity is what makes this skill honest. Arabic has no single authori
 Academy contradicted *itself* on where the hamza sits between its 26th and 46th sessions, Damascus
 gives a third answer, and the Damascus preface states outright that no pan-Arab consensus exists.
 **A checker that picked a side would be wrong about half the time with the authority of a tool** —
-the most expensive kind of wrong for a reader who cannot check the Arabic. No rule carries
-`divergence` yet; the engine already supports one.
+the most expensive kind of wrong for a reader who cannot check the Arabic. One rule carries it:
+`AR-TANWIN-01` reports a text that places tanwīn al-fatḥ both ways — `أيضًا` and `أيضاً` — and never
+says which is right, because published Arabic splits 7 publishers to 6 on it.
 
 ## Do not invent rules
 
@@ -285,6 +286,12 @@ italics at all in Arabic" — slanting distorts the ductus, the connected stroke
 within a word, and hurts legibility at subtitle sizes. The World Bank recommends them for
 subheadings. Neither is wrong: Arabic has no capital letters, so the device other scripts use for
 emphasis is simply missing, and the two guides fill the gap differently.
+
+**A missing tanwīn is not an error — and not the norm either.** `شهرا` without the double fatḥa is
+attested: measured on BAREC, the mark is omitted on 20.6% of words that take it, and 4 publishers out
+of 15 omit it in majority. But 79.4% write it. Do not flag its absence; do not present its absence as
+standard practice. Where it is written, it sits before the alif (`أيضًا`) or on it (`أيضاً`), and both
+are in print — see `AR-TANWIN-01` in [references/divergences.md](references/divergences.md).
 
 **Hamza seating is the single most disputed point in Arabic orthography.** شؤون (Cairo 26th session,
 and Damascus) against شئون (Cairo 46th session). Both are in print. Report the divergence and the

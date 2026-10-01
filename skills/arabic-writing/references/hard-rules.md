@@ -10,9 +10,9 @@ the strength of its chain, so the severities come first. Editions are in `source
 > cannot reconstruct from `assets/rules.json`.
 
 **Labels follow `registers.md`:** `[verified]` = measured first-hand here; `[reported]` = read through
-a summary or carried from research. **Inventory read from the table on 2026-09-17:** eight rules —
-four `hard`, four `recommendation`, none `divergence`; `python -m unittest discover -s tests -t .` →
-`Ran 139 tests … OK`.
+a summary or carried from research. **Inventory read from the table on 2026-10-01:** nine rules —
+four `hard`, four `recommendation`, one `divergence`; `python -m unittest discover -s tests -t .` →
+`Ran 158 tests … OK (skipped=2)`.
 
 ## The three severities
 
@@ -26,8 +26,8 @@ The third is unusual, and it is what makes this skill honest. Arabic has no sing
 Academy contradicted *itself* on where the hamza sits between its 26th and 46th sessions, Damascus
 gives a third answer, and the Damascus preface states outright that no pan-Arab consensus exists
 (`divergences.md`). A checker that picked a side would be wrong about half the time with the authority
-of a tool. **No rule yet carries `divergence`**; the severity exists in `scripts/rules.py` so the
-engine already supports one.
+of a tool. **One rule carries `divergence`: `AR-TANWIN-01`**, the placement of tanwīn al-fatḥ. It is
+walked through in `divergences.md`, not here, because it never judges a text.
 
 # The hard rules
 
