@@ -7,6 +7,8 @@ It is built for one situation in particular: **you have to approve Arabic text a
 Arabic.** Every finding prints in English — the rule, the fix, and the source — and the Arabic
 appears only as the excerpt, which is the evidence you hand to someone who does read it.
 
+**Beginner guides:** [Français](GUIDE.fr.md) · [العربية](GUIDE.ar.md)
+
 ## What makes it different from asking a model to "check my Arabic"
 
 We measured that. Five agents were given Arabic tasks without this skill and their output was
