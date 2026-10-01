@@ -90,7 +90,11 @@ def strip_markdown(source: str, prose_only: bool = False) -> str:
     source = re.sub(r"```.*?```", blank, source, flags=re.S)
     source = re.sub(r"~~~.*?~~~", blank, source, flags=re.S)
     source = re.sub(r"`[^`\n]+`", _jeton, source)   # code en ligne : mot factice, pas du vide
-    source = re.sub(r"^\s{4,}\S.*$", blank, source, flags=re.M)
+    # [ \t] et non \s : \s inclut le saut de ligne, et après un bloc de code
+    # (déjà blanchi en espaces) suivi d'une ligne vide, le motif traversait les
+    # lignes et effaçait la première ligne de prose qui suit chaque bloc. Toutes
+    # les règles étaient aveugles sur ces lignes (constaté le 2026-10-01).
+    source = re.sub(r"^(?:[ ]{4,}|\t)[ \t]*\S.*$", blank, source, flags=re.M)
     source = re.sub(r"^---\n.*?\n---\n", blank, source, flags=re.S)  # front matter
     return source
 
@@ -186,6 +190,20 @@ HARD_RULES = [
         "TYPO-10",
         re.compile(r"\(\s|\s\)"),
         "espace collée à l’intérieur d’une parenthèse",
+        None,
+    ),
+    (
+        # Le défaut que corriger.py produisait avant le 2026-10-01 (« 1 + espace
+        # + insécable + : »), invisible pour toutes les autres règles. Limité aux
+        # endroits où la typographie française place une insécable : devant
+        # : ; ! ? » et après «. Validé sur 93 pages HTML : hors de ces signes,
+        # « &nbsp;·&nbsp; » ou « &nbsp; Livré » sont des espacements de mise en
+        # page voulus, pas des fautes. « (?<=\S) » écarte aussi une balise effacée,
+        # qui laisse plusieurs espaces.
+        "TYPO-11",
+        re.compile(rf"(?<=\S)(?:[ ][{NBSP}{NARROW_NBSP}]|[{NBSP}{NARROW_NBSP}][ ])(?=[:;!?»])"
+                   rf"|(?<=«)(?:[ ][{NBSP}{NARROW_NBSP}]|[{NBSP}{NARROW_NBSP}][ ])"),
+        "espace ordinaire collée à une espace insécable — n’en garder qu’une, l’insécable",
         None,
     ),
     # --- anglicismes ---

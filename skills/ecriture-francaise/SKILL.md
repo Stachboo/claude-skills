@@ -49,6 +49,7 @@ Référence : *Lexique des règles typographiques en usage à l'Imprimerie natio
 | Pas d'espace avant `.` `,` | `mot, mot.` | `mot , mot .` |
 | Pas d'espace après `(` ni avant `)` | `(ainsi)` | `( ainsi )` |
 | Espace insécable dans les nombres | `15 000 €` | `15000€` |
+| Une seule espace, jamais deux | `Étape 1 :` (U+00A0 seule) | espace ordinaire + U+00A0 |
 
 Détail complet et cas limites : `references/typographie.md`.
 

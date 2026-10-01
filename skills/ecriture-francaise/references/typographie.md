@@ -22,6 +22,12 @@ Mnémotechnique fiable : deux signes, deux espaces ; un signe, une espace.
 **Cas des deux-points.** L'usage français retient l'espace insécable ordinaire, non la
 fine. L'espace fine progresse mais n'est pas la norme établie.
 
+**Une seule espace, jamais deux.** L'insécable remplace l'espace ordinaire, elle ne
+s'y ajoute pas. Une espace ordinaire collée à une insécable (`Étape 1` + espace +
+U+00A0 + `:`) ne se voit pas à l'écran mais casse la ligne au mauvais endroit.
+Le vérificateur la signale (`TYPO-11`). C'est le défaut que `corriger.py` produisait
+après un chiffre avant le 2026-10-01 : sur 898 fichiers réels, 400 occurrences.
+
 **Nombres.** Séparateur de milliers : espace insécable, jamais de virgule.
 `15 000 €`, jamais `15,000 €` ni `15000€`. L'unité et le symbole monétaire sont
 précédés d'une insécable.
