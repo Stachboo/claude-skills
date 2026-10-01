@@ -328,13 +328,18 @@ class TestRulingsOf20260917(unittest.TestCase):
     def setUp(self):
         self.rules = load_rules(ROOT / "assets" / "rules.json")
 
-    def test_exactly_four_rules_are_hard(self):
-        # Four, down from six. `hard` means unanimous AND decidable without
-        # context. AR-SCRIPT-01 is neither; AR-ORTH-01 is decidable but not
-        # unanimous -- BAREC has the form it blocks at 60 against 3.
+    def test_exactly_five_rules_are_hard(self):
+        # Four on 2026-09-17, down from six. `hard` means unanimous AND
+        # decidable without context. AR-SCRIPT-01 is neither; AR-ORTH-01 is
+        # decidable but not unanimous -- BAREC has the form it blocks at 60
+        # against 3. AR-ORTH-02 joined on 2026-10-01 on both halves: Damascus
+        # and Harun require the hamza of qat', no source permits omitting it,
+        # BAREC writes it on 98.4% of the listed words, and 25 sampled
+        # omissions were 25 true misspellings.
         hard = sorted(r["id"] for r in self.rules if r["severity"] == "hard")
         self.assertEqual(
-            ["AR-RELIG-02", "AR-TYPO-01", "AR-TYPO-02", "AR-TYPO-03"], hard)
+            ["AR-ORTH-02", "AR-RELIG-02", "AR-TYPO-01", "AR-TYPO-02", "AR-TYPO-03"],
+            hard)
 
     def test_orth01_is_a_recommendation_not_hard(self):
         r = [x for x in self.rules if x["id"] == "AR-ORTH-01"][0]

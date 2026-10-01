@@ -20,13 +20,14 @@ Vous n’avez pas besoin de lire l’arabe pour l’utiliser : les remarques so
 
 ## Ce qu’il ne fait pas
 
-- Il ne corrige ni l’orthographe ni la grammaire.
+- Il ne corrige ni la grammaire ni l’orthographe, à une exception près : la hamza ou la madda
+  oubliée sur une vingtaine de mots courants (`الى` au lieu de `إلى`, `الان` au lieu de `الآن`…).
 - Il ne tranche aucune question de fiqh.
 - Il ne choisit pas de camp quand les académies se contredisent.
 - Un texte qui cite le Coran ou un hadith doit être relu par une personne qualifiée avant d’être
   publié.
 
-## Étape 1  : vérifier que Python est installé
+## Étape 1 : vérifier que Python est installé
 
 Le skill a besoin de Python 3.8 ou plus récent, sans rien d’autre à installer.
 
@@ -41,7 +42,7 @@ Sur Mac et Linux, tapez `python3` à la place de `python`, ici comme dans tout l
 Si la commande est introuvable, installez Python depuis [python.org](https://www.python.org/downloads/).
 Sous Windows, cochez la case **Add python.exe to PATH** pendant l’installation.
 
-## Étape 2  : installer le skill
+## Étape 2 : installer le skill
 
 La méthode la plus simple ne demande aucun outil :
 
@@ -67,7 +68,7 @@ Dans Claude Code, deux commandes suffisent :
 
 Relancez ensuite votre assistant.
 
-## Étape 3  : l’utiliser avec votre assistant
+## Étape 3 : l’utiliser avec votre assistant
 
 Aucune commande à retenir. Demandez en français ce que vous voulez, par exemple :
 

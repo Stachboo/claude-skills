@@ -1,18 +1,19 @@
-# Hard rules: what blocks a build, what only reports, and why
+# Hard rules: what blocks a build, and why
 
-This file walks every rule in `assets/rules.json` — what it catches, a wrong and a right example, the
+This file walks every **hard** rule in `assets/rules.json` — what it catches, a wrong and a right example, the
 fix, and the source quoted from the rule's own `isnad` field — so that a reader who does not read
 Arabic can check a verdict against its source instead of trusting the tool. A rule's severity tracks
 the strength of its chain, so the severities come first. Editions are in `sources.md`.
 
-> **This file is at its length budget. The next rule splits it; it does not squeeze it.** Compressing
-> the reasoning to fit is how a reference decays into a list, and the reasoning is the part a reader
-> cannot reconstruct from `assets/rules.json`.
+> **Split on 2026-10-01, as this note required.** The recommendations, and the two demotions of
+> 2026-09-17 that produced two of them, moved to `recommendations.md` when `AR-ORTH-02` arrived.
+> Compressing the reasoning to fit is how a reference decays into a list, and the reasoning is the
+> part a reader cannot reconstruct from `assets/rules.json`.
 
 **Labels follow `registers.md`:** `[verified]` = measured first-hand here; `[reported]` = read through
-a summary or carried from research. **Inventory read from the table on 2026-10-01:** nine rules —
-four `hard`, four `recommendation`, one `divergence`; `python -m unittest discover -s tests -t .` →
-`Ran 158 tests … OK (skipped=2)`.
+a summary or carried from research. **Inventory read from the table on 2026-10-01:** ten rules —
+five `hard`, four `recommendation`, one `divergence`; `python -m unittest discover -s tests -t .` →
+`Ran 170 tests … OK (skipped=2)`.
 
 ## The three severities
 
@@ -111,113 +112,58 @@ head of an utterance.") **Scope limit, from the rule's own note:** Zakī's rule 
 *typographic* line; the pattern sees only the *source* line, a paragraph in a plain-text or Markdown
 file. It errs safe: a paragraph opening on a comma is wrong under any line breaking.
 
-# The recommendations
+## AR-ORTH-02 — hamzat qaṭʿ or madda left off
 
-## AR-DIAC-01 — over-vocalised running prose
+Catches one of 22 words written with a bare alif where the hamza (ء on the alif) or the madda (آ)
+belongs: `الى` for `إلى`, `اذا` for `إذا`, `او` for `أو`, `ان` for `أن`/`إن`, `الان` for `الآن`, `الاف`
+for `آلاف`… The list is closed on purpose: every bare form on it is a misspelling and never another
+word, which is what makes the rule decidable without a morphological analyser.
 
-Catches running prose carrying full تشكيل (*tashkīl*, the marks above and below letters for short
-vowels and gemination), which belongs on Qurʾanic and hadith citations, not the prose around them. It
-is the one defect the RED baseline showed occurring in machine-written Arabic.
+- wrong — `ذهب الولد الى المدرسة.` → right — `ذهب الولد إلى المدرسة.`
+- **not flagged** — `واحد` (*wāḥid*, "one", not و + احد), `فان` (*fānin*, "perishing", Q 55:26),
+  `عقد القران` (*al-qirān*, the marriage contract, which is why القرآن is not on the list).
+- **Fix:** write the hamza above the alif with fatḥa or ḍamma, below it with kasra; write آ where a
+  hamza is followed by a long alif.
 
-- wrong — `إِنَّ الزَّكَاةَ رُكْنٌ مِنْ أَرْكَانِ الْإِسْلَامِ.` → **840** per 1000
-- right — `إنّ الزكاة ركن من أركان الإسلام.` → **40** per 1000 — `[verified]`, `check.diacritic_density`
-- **Fix:** keep shadda (gemination), madda (the long-alif mark) and hamzat qaṭʿ (the written glottal
-  stop); drop the fatḥa (the a-vowel) except on wāw and yāʾ; vocalise uncommon proper names.
+> Majma al-Lugha al-Arabiyya, Damascus, Qawa'id al-imla, bab 1, 'al-hamza fi awwal al-kalima': the
+> hamza of qat' is written and the hamza of wasl is not; it sits above the alif with fatha or damma and
+> below it with kasra; a hamza followed by a long alif is written as one alif carrying the madda.
+> Harun, Qawa'id al-imla wa-alamat al-tarqim: 'tursam hamzat al-qat' fi awwal al-kalima alifan ma'a
+> wad' alamat al-qat' (hamza) fawqaha fi halat al-fath wa-l-damm, wa-tahtaha fi halat al-kasr'.
 
-> Majma al-Lugha al-Arabiyya, Cairo, 'qawa'id al-shakl fi al-kutub al-madrasiyya', approved by the
-> council 1959 and the conference 1960: full vocalisation for Qur'anic verses and hadith at every
-> level; elsewhere 'yuhmal al-shakl bi-l-fatha' while shadda, madda and hamzat qat' remain
-> obligatory. Corroborated independently by the World Bank Arabic Style Guide 2004 and the Netflix
-> Arabic Style Guide, which both make diacritics functional. Measured on this project's RED baseline
-> 2026-09-17: generated prose reached 784 and 770 diacritics per 1000 Arabic letters, against 9 for
-> a news dispatch.
+**Why it is `hard`: both halves of the criterion hold.** The source half: two normative works, read
+in the project's library, and no consulted source permits leaving the hamza off. These are rules of
+orthography for all writing — not the 1959–60 school-book vocalisation decision, which is a different
+text with a narrower scope. The count half, on BAREC v1.0, functional prose, 2026-10-01 `[verified]`:
+the hamza is written on **25 636 of 26 061** occurrences of the listed words (98.4%) — Hindawi omits
+it on 0 of 7 943, Green Library on 0 of 1 483, Wikipedia on 0.2%. The omissions come from typed and
+pasted text: constitutions 11.4%, exam questions 8.0%, subtitles 15.4%, song lyrics 38.8% — exactly
+the legacy and CMS copy this checker exists for. **Precision, read by hand: 53 of 53** — 40 random
+hits and every hit in the professional publishers.
 
-**PROVISIONAL threshold — 200 per 1000, the only figure in this table with no isnad of its own.** No
-consulted source states a cut-off: the number is *inferred from measurement*, not transmitted from an
-authority, and is marked provisional on purpose. Correct measurements run 9–43 and defective ones
-770–784, leaving an empty band; 200 is the log-midpoint √(43 × 770) = 182 rounded up — 4.7× above the
-highest correct measurement, 3.9× below the lowest defective one, rounded **up** so the residual risk
-falls on the miss. **Re-measure and move it if correct, functionally vocalised prose is found above
-100.**
+**Three false positives were found and fixed before it shipped**, all by reading hits rather than
+counting them. A prefix made a real word (`واحد` read as و + احد: "ahd" measured 30% missing until
+prefixes were allowed word by word). A bare form was another word (`القران` in `عقد القران`). And a
+word boundary that only knew U+0621–U+064A found `ان` inside `طغیان` written with the Farsi yeh U+06CC,
+and inside quoted Persian. The boundary now covers the whole Arabic script.
 
-Mechanics: `kind` is `ratio`, `pattern` is `null`, and `scripts/check.py` owns it. It measures only
-**after** removing every span between the ornate parentheses and between the guillemets, since full
-vocalisation is *required* inside a citation by the same decision that discourages it outside; and it
-fires only where the profile declares diacritics `functional`.
+**Known limit:** only the 22 listed words are checked. The rule under-detects by design.
 
-## AR-ORTH-01 — hundreds written joined
+# Counter-rule: a missing shadda is not a fault
 
-Reports the numerals three to nine written joined to مائة (*miʾa*, "hundred") instead of detached.
-**Demoted from `hard` on 2026-09-17 on measurement** (below) — no wrong/right framing applies, which
-*is* the finding.
+**The skill must not flag a missing shadda (ّ, gemination) in functional prose.** On BAREC v1.0,
+functional prose, 2026-10-01 `[verified]`, the shadda is absent on **95.5%** of 10 218 words that
+always carry a geminated consonant (ثم، كل، مرة، قوة، خاصة…) — and the professional publishers are
+no exception: Hindawi 89.8%, Wikipedia 93.9%, Majed 100%. Leaving it off is how published Arabic is
+written.
 
-- reports — `في المدينة ثلاثمائة مسجد.` → the Academy's form — `في المدينة ثلاث مائة مسجد.`
-- **Fix as stated:** write ثلاث مائة … تسع مائة with a space between them. (Known limitation: the
-  pattern matches bare letters, so a vocalised joined form slips through.)
-
-> Decision of Majma al-Lugha al-Arabiyya, Cairo, 'fi kitabat al-a'dad: fasl thalath ila tis' an
-> mi'a', four motives given (joined form is obscure; detachment attested in al-Tabari; the case
-> ending falls on the first word; easier for learners). Reproduced verbatim by Abd al-Salam Muhammad
-> Harun, Qawa'id al-imla wa-alamat al-tarqim. Archive.org item a476n.
-
-## AR-RELIG-01 — the abbreviated prayer on the Prophet
-
-Reports `(ص)` or `(صلعم)` in place of the full formula.
-
-- reports — `قال النبي (ص) في الحديث.` → preferred — `قال النبي ﷺ في الحديث.` (U+FDFA), or the
-  formula written out in full
-- **Fix:** replace with ﷺ or the full formula. The trailing `\s*\)` keeps a page citation out of
-  range: `(ص ١٢)` does not match.
-
-> PENDING FIRST-HAND VERIFICATION. Convergence reported by Dar al-Ifta al-Misriyya fatwa 19288, Ibn
-> Baz fatwas 13605 and 7369, and Jordanian Ifta 3607 - but these were read via tool summary, not at
-> source. Deliberately kept a recommendation, not a hard rule, until read directly: this project
-> does not fail a text on a second-hand religious source.
-
-**Do not upgrade that status.** Four converging fatwas would satisfy the unanimity half of `hard` if
-they had been read; they have not been. Severity tracks the chain, not the confidence — and see the
-human-review gate in `religious-register.md`: nothing here is a religious ruling.
-
-## AR-SCRIPT-01 — bare Latin script inside an Arabic sentence
-
-Reports a run of Latin script with Arabic on both sides. **Demoted from `hard` on 2026-09-17 on reasoning** (below).
-
-- reports, correctly — `كتبت Umm Salama رسالة طويلة.` → `كتبت أم سلمة رسالة طويلة.`
-- reports, and should not — `تعمل شركة Microsoft العالمية في المدينة.`
-- **Fix:** write the name in Arabic script; the Latin original may follow in parentheses.
-- `[verified]` both lines were run through `run_rules` here; both fire. The second is the false
-  positive that cost the rule its `hard` severity.
-
-> Majma al-Lugha al-Arabiyya, Cairo, 'qararat kitabat al-a'lam al-a'jamiyya bi-huruf arabiyya', rule
-> 1: write the foreign name per its pronunciation, with the Latin form between parentheses in
-> scholarly works, e.g. Bordeaux. Netflix Arabic Style Guide converges: 'Proper names should be
-> transliterated.'
-
-# The two demotions of 2026-09-17, and the lesson
-
-Both kept their patterns — neither was wrong about what it matched — and both lost `hard`, on
-**different halves of the criterion**, which is why both are recorded.
-
-**AR-SCRIPT-01, on reasoning.** The case the rule was written for — a name of Arabic origin romanised
-and left in Latin script inside Arabic prose, `Umm Salama` where أم سلمة was meant — **is not
-mechanically distinguishable from a legitimate foreign brand name**, as `شركة Microsoft العالمية`
-shows above. Bare Latin brand names in contemporary Arabic web copy are a usage the Academy decision
-predates, so unanimity fails. The RED baseline added a second reason: models already transliterate
-Arabic-origin names unprompted, so as a hard rule it would fire almost only on legacy web copy, where
-a false positive costs more than a miss.
-
-**AR-ORTH-01, on measurement.** Its source is excellent by every criterion but one: a Cairo Academy
-decision, four motives stated, reproduced verbatim by the reference editor of the Arabic heritage.
-Then it was counted. Across all thirty sources of BAREC the joined form outnumbers the detached
-**60 to 3** — **95 per cent of published usage**, spread over literature, children's publishing,
-classical narrative and encyclopedia, so not one register's quirk. A sweep of **11,888 sentences**
-returned **17 findings, 0 true positives, precision 0.00**. The decision is an *argued reform*, not a
-report of settled usage; a reform publishing ignores 95 per cent of the time fails the unanimity half
-of `hard`. It still reports; it no longer fails a build.
-
-> **The lesson, and it governs every future rule: a sourced rule and an observed rule are not the
-> same thing. A rule reaches `hard` only with a source AND a corpus count.** AR-ORTH-01 is the case
-> where they come apart with the source impeccable; AR-TYPO-01 is the case where they agree.
+The 1959–60 Cairo decision does say «يُلتزم وضع الشدة، والمدة، وهمزة القطع». **Read its scope before
+quoting it:** that clause belongs to the *middle-school* tier of a decision about textbooks, in a
+regime where word endings are vocalised. For the secondary tier — the nearest to an adult reader — the
+same decision says the opposite: vocalise only where the pupil is expected to err. Madda and hamzat
+qaṭʿ are another matter: they are letters (آ أ إ, U+0622, U+0623, U+0625), governed by orthography,
+and `AR-ORTH-02` checks them. The shadda is a mark, and in functional prose it is written where its
+absence would mislead — the Netflix and World Bank principle — not everywhere.
 
 # Counter-rule: the dash — الشرطة — is legitimate Arabic
 

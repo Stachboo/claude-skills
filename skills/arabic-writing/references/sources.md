@@ -32,10 +32,10 @@ python -c "import json; print([r['id'] for r in json.load(open('assets/rules.jso
 Output, run from the skill root on 2026-09-17:
 
 ```
-['AR-TYPO-01', 'AR-TYPO-02', 'AR-TYPO-03', 'AR-ORTH-01', 'AR-SCRIPT-01', 'AR-RELIG-02', 'AR-RELIG-01', 'AR-DIAC-01', 'AR-TANWIN-01']
+['AR-TYPO-01', 'AR-TYPO-02', 'AR-TYPO-03', 'AR-ORTH-01', 'AR-ORTH-02', 'AR-SCRIPT-01', 'AR-RELIG-02', 'AR-RELIG-01', 'AR-DIAC-01', 'AR-TANWIN-01']
 ```
 
-Nine ids, nine lines in the table below (re-run 2026-10-01). **No gap.**
+Ten ids, ten lines in the table below (re-run 2026-10-01). **No gap.**
 
 ## Rule → source
 
@@ -45,6 +45,7 @@ Nine ids, nine lines in the table below (re-run 2026-10-01). **No gap.**
 | **AR-TYPO-02** | Unicode Character Database | Python `unicodedata`, stdlib | `python -c "import unicodedata as u; print(u.name(chr(0x060C)))"` → `ARABIC COMMA`; likewise `0x061B`, `0x061F`. `[verified]` (re-run here) |
 | **AR-TYPO-03** | Aḥmad Zakī Bāšā, *al-Tarqīm wa-ʿalāmātuh fī al-lugha al-ʿarabiyya* (1912), section 1 | Hindawi / Safahat edition, full text at `safahat.org/books/82047270/1/`; PDF and EPUB at `downloads.hindawi.org/books/82047270` | read section 1 and find «من هذه العلامات ما لا يجوز وضعه مطلقًا، لا في أول السطر ولا في أول الكلام». `[verified]` (research phase) — full text, not a summary |
 | **AR-ORTH-01** | Decision of مجمع اللغة العربية, Cairo, *في كتابة الأعداد*; reproduced by ʿAbd al-Salām Muḥammad Hārūn, *Qawāʿid al-imlāʾ wa-ʿalāmāt al-tarqīm* | Academy: *جملة قرارات مجمع اللغة العربية بالقاهرة*, PDF 83 pp., المكتبة الشاملة digitisation. Hārūn: Internet Archive item **`a476n`** | find the decision detaching ثلاث…تسع from مائة and its four motives. **Then count**: the corpus measurement below is what governs the severity. `[verified]` (research phase) — both documents read in full |
+| **AR-ORTH-02** | Majmaʿ al-Lugha al-ʿArabiyya, Damascus, *Qawāʿid al-imlāʾ*, bāb 1, «الهمزة في أول الكلمة»; Hārūn, *Qawāʿid al-imlāʾ wa-ʿalāmāt al-tarqīm*; BAREC Corpus v1.0 | Damascus PDF and Hārūn `a476n` in the project library, read through OCR; BAREC as for AR-TANWIN-01 | Damascus: the hamza of qaṭʿ is written, not that of waṣl; above the alif with fatḥa or ḍamma, below with kasra; hamza + long alif → آ. Hārūn: «ترسم همزة القطع في أول الكلمة ألفًا مع وضع علامة القطع (ء) فوقها في حالة الفتح والضم، وتحتها في حالة الكسر». **Then count:** `python tools/barec_hamza_madda_shadda.py DIR` → written on 25 636 of 26 061 (98.4%), Hindawi 0 of 7 943 omitted. Precision read by hand 53 of 53. `[verified]` (OCR read here, noisy but unambiguous on these sentences) Damascus, Hārūn; `[verified]` (measured here, 2026-10-01) BAREC |
 | **AR-SCRIPT-01** | Decision of مجمع اللغة العربية, Cairo, *قرارات كتابة الأعلام الأعجمية بحروف عربية*, rule 1; Netflix **§5 Character Names** converging | same Academy collection as above; Netflix archive as for AR-TYPO-01 | find rule 1 (write the foreign name per its pronunciation, Latin form in parentheses in scholarly works); Netflix §5: **"Proper names should be transliterated."** `[verified]` (research phase) Academy; `[verified]` (first-hand) Netflix |
 | **AR-RELIG-02** | Unicode Character Database | Python `unicodedata`, stdlib | `python -c "import unicodedata as u; print(u.category(chr(0xFD3F)), u.category(chr(0xFD3E)))"` → `Ps Pe`; `u.mirrored` is 0 for both. `[verified]` (re-run here) |
 | **AR-RELIG-01** | Dār al-Iftāʾ al-Miṣriyya fatwa **19288**; Ibn Bāz fatwas **13605** and **7369**; Jordanian Iftāʾ **3607** | not held locally; only fatwa numbers are recorded | **PENDING FIRST-HAND VERIFICATION.** Open each fatwa at its issuing body and read it. Until that is done the rule stays a recommendation. `[reported]` |
@@ -57,7 +58,7 @@ Nine ids, nine lines in the table below (re-run 2026-10-01). **No gap.**
 authority.** No consulted source states a cut-off. It is inferred from two measurements, is marked
 `PROVISIONAL` in the table, and is the only figure in the whole rule set without an isnad of its
 own. It is listed here rather than quietly omitted, because a file whose purpose is the chain must
-name the one place the chain stops. The reasoning and the numbers are in `hard-rules.md`.
+name the one place the chain stops. The reasoning and the numbers are in `recommendations.md`.
 
 ## Claims verified locally by execution
 
@@ -168,4 +169,4 @@ happened three times on 2026-09-17, and not all in the same direction: `AR-ORTH-
 source was **strengthened** — fetched, read and archived — so that a rule already at `hard` finally
 rested on a document somebody had opened. Re-examination is not a demotion procedure. It is the
 procedure; the direction is whatever the source turns out to say. The reasoning is in
-`hard-rules.md`.
+`recommendations.md`.

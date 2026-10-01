@@ -122,7 +122,7 @@ Three severities, and the gate between them is the point of the project.
 
 - **`hard`** — exits 1. A rule reaches this only with **a source and a corpus count**. Unanimous
   across consulted authorities, and context-free: no genre, school or register makes it acceptable.
-  There are four.
+  There are five.
 - **`recommendation`** — reports, never blocks. Real editorial preferences that published Arabic
   does not follow unanimously.
 - **`divergence`** — never judges spelling. Where the academies genuinely contradict each other, the
@@ -142,7 +142,8 @@ pending — including the ones that are not good enough yet.
 
 ## What it does not do
 
-It is not a spell checker. It does not rule on fiqh and never overrides a qualified human on
+It is not a spell checker: the one spelling it checks is a hamza or madda left off 22 common
+words. It does not rule on fiqh and never overrides a qualified human on
 scripture. It does not settle where the academies disagree. It does not measure the verbal/nominal
 ratio and does not check the `school`, `digits` or `italics` fields — no tagger ships here and no
 rule consumes those three. It is aimed at **human-written, legacy, translated and CMS-pasted
@@ -157,7 +158,7 @@ One number in it has no source: `AR-DIAC-01`'s threshold of 200 diacritics per 1
 python -m unittest discover -s tests -t .
 ```
 
-158 tests. They include a false-positive budget measured over a clean corpus, because the risk this
+170 tests. They include a false-positive budget measured over a clean corpus, because the risk this
 project actually runs is not missing an error — it is inventing one.
 
 ## Licence

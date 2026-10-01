@@ -4,7 +4,7 @@ description: Reviews and writes Modern Standard Arabic. Checks punctuation, orth
 license: MIT
 compatibility: Requires Python 3.8+ (standard library only)
 metadata:
-  version: "0.2.0"
+  version: "0.3.0"
 ---
 
 # Arabic Writing
@@ -233,7 +233,8 @@ band by publisher. It measures where a text was published, not how hard it is.
 **Severity tracks the strength of the chain, never anyone's confidence.** Two rules were demoted on
 2026-09-17 for exactly that reason — one on reasoning, one on a corpus count that contradicted an
 otherwise impeccable source. The full walkthrough, with a wrong and a right example per rule, is in
-[references/hard-rules.md](references/hard-rules.md).
+[references/hard-rules.md](references/hard-rules.md) and
+[references/recommendations.md](references/recommendations.md).
 
 The third severity is what makes this skill honest. Arabic has no single authority: the Cairo
 Academy contradicted *itself* on where the hamza sits between its 26th and 46th sessions, Damascus
@@ -287,6 +288,11 @@ within a word, and hurts legibility at subtitle sizes. The World Bank recommends
 subheadings. Neither is wrong: Arabic has no capital letters, so the device other scripts use for
 emphasis is simply missing, and the two guides fill the gap differently.
 
+**A missing shadda is not an error.** It is absent on 95.5% of words that take one in BAREC
+functional prose, professional publishers included. The 1959–60 clause that makes it obligatory is
+for middle-school textbooks. A missing hamza or madda is a different thing: those are letters, and
+`AR-ORTH-02` checks them — see [references/hard-rules.md](references/hard-rules.md).
+
 **A missing tanwīn is not an error — and not the norm either.** `شهرا` without the double fatḥa is
 attested: measured on BAREC, the mark is omitted on 20.6% of words that take it, and 4 publishers out
 of 15 omit it in majority. But 79.4% write it. Do not flag its absence; do not present its absence as
@@ -303,7 +309,8 @@ More, with the positions and the bodies that hold them, in
 ## What this skill does NOT do
 
 - **It is not a spell checker.** It checks punctuation, encoding, vocalisation density and sentence
-  length. It does not know whether a word is misspelled.
+  length. The one spelling it checks is a hamza or madda left off 22 common words (`AR-ORTH-02`);
+  beyond that list it does not know whether a word is misspelled.
 - **It does not rule on fiqh, and never overrides a qualified human on scripture.** Every finding
   touching religion here is typographic or editorial. `AR-RELIG-02` (reversed ornate parentheses) is
   `hard` only because it is an *encoding* fact verified in one command; `AR-RELIG-01` (the
@@ -321,7 +328,9 @@ More, with the positions and the bodies that hold them, in
 
 ## Reference files
 
-- [references/hard-rules.md](references/hard-rules.md) — every rule: what it catches, a wrong and a
+- [references/recommendations.md](references/recommendations.md) — the four rules that report and
+  never block, and the two demotions of 2026-09-17.
+- [references/hard-rules.md](references/hard-rules.md) — every blocking rule: what it catches, a wrong and a
   right example, the fix, the source, and why each severity is what it is.
 - [references/divergences.md](references/divergences.md) — where the authorities genuinely
   contradict each other, and what the checker does instead of choosing.
